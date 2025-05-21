@@ -1,0 +1,106 @@
+<div class="sm:rounded-lg min-w-full max-w-[74vw]">
+      <div class="data-table">
+            <div class="table-container overflow-auto">
+                  <table class="divide-y divide-gray-200 w-full">
+                        <thead class="bg-gray-50">
+                              <tr>
+                                    <th *ngFor="let col of columns"
+                                          [ngClass]="col.align ? 'text-' + col.align : 'text-left'"
+                                          [style.width]="col.width"
+                                          class="px-4 py-2 text-xs font-medium uppercase tracking-wider">
+                                          {{ col.header }}
+                                    </th>
+                                    <th class="px-4 py-2 text-xs font-medium uppercase tracking-wider text-center">
+                                          Action</th>
+                              </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                              <!-- No data row -->
+                              <tr *ngIf="!pagedData?.length">
+                                    <td [attr.colspan]="columns.length + 1" class="px-4 py-8 text-center text-gray-500">
+                                          No Data Found
+                                    </td>
+                              </tr>
+
+                              <!-- Data rows -->
+                              <tr *ngFor="let row of pagedData; let rowIndex = index" class="hover:bg-gray-50">
+                                    <!-- Data columns -->
+                                    <td *ngFor="let col of columns"
+                                          class="px-4 py-2 whitespace-nowrap text-sm text-gray-700"
+                                          [ngClass]="col.align ? 'text-' + col.align : 'text-left'">
+
+                                          <!-- Sr. No column -->
+                                          <ng-container *ngIf="col.field === ''">
+                                                {{ ((currentPage - 1) * pageSize) + rowIndex + 1 }}
+                                          </ng-container>
+
+                                          <!-- Pipe applied -->
+                                          <ng-container *ngIf="col.field && col.pipe">
+                                                {{ applyPipe(row[col.field], col.pipe) }}
+                                          </ng-container>
+
+                                          <!-- Is array -->
+                                          <ng-container *ngIf="col.field && col.isArray">
+                                                {{ parseData(row[col.field]) || 'N/A' }}
+                                          </ng-container>
+
+                                          <!-- Normal field display -->
+                                          <ng-container *ngIf="col.field && !col.pipe && !col.isArray">
+                                                {{ row[col.field] || 'N/A' }}
+                                          </ng-container>
+
+                                    </td>
+
+                                    <!-- Action column -->
+                                    <td class="px-4 py-2 text-sm text-blue-600 text-center">
+                                          <div class="flex justify-center items-center gap-2 cursor-pointer">
+                                                <span (click)="emitView(row)"
+                                                      class="border border-[#1b83c1] rounded text-sm px-1 text-[#1b83c1]"
+                                                      title="View">
+                                                      <i class="bi bi-eye"></i>
+                                                </span>
+                                                <span (click)="emitEdit(row)"
+                                                      class="border border-[#1733d0] rounded text-sm px-1 text-[#1733d0]"
+                                                      title="Edit">
+                                                      <i class="bi bi-pencil"></i>
+                                                </span>
+                                                <span (click)="emitDelete(row)"
+                                                      class="border border-[#941e11] rounded text-sm px-1 text-[#941e11]"
+                                                      title="Delete">
+                                                      <i class="bi bi-trash"></i>
+                                                </span>
+                                                <!-- <button (click)="emitView(row)" class="hover:underline">View</button> -->
+                                          </div>
+                                    </td>
+                              </tr>
+                        </tbody>
+
+                  </table>
+            </div>
+      </div>
+      <!-- Pagination -->
+      <nav class="flex items-center justify-between" *ngIf="totalRecords">
+            <div class="flex items-center">
+                  <span class="text-sm">Rows per page:</span>
+                  <select [value]="pageSize" (change)="onPageSizeChange($event)"
+                        class="ml-2 p-1 border rounded-sm text-sm">
+                        <option *ngFor="let size of pageSizeOptions" [value]="size">{{ size }}</option>
+                  </select>
+                  <span class="ml-4 text-sm">
+                        {{ ((currentPage - 1) * pageSize + 1) }} -
+                        {{ getPageEnd() }} of {{ totalRecords }}
+                  </span>
+            </div>
+            <ul class="inline-flex space-x-1">
+                  <li>
+                        <button [disabled]="currentPage === 1" (click)="onPageChange(currentPage - 1)"
+                              class="px-3 py-1 border rounded-sm text-sm disabled:opacity-50">Prev</button>
+                  </li>
+                  <li>
+                        <button [disabled]="currentPage * pageSize >= totalRecords"
+                              (click)="onPageChange(currentPage + 1)"
+                              class="px-3 py-1 border rounded-sm text-sm disabled:opacity-50">Next</button>
+                  </li>
+            </ul>
+      </nav>
+</div>
