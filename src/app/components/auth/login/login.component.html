@@ -59,20 +59,16 @@
                         </div>
 
                         <div class="text-sm my-4">
-                              <div class="inline-flex items-center gap-x-1">
+                              <div class="inline-flex items-center gap-x-2">
                                     <input type="checkbox" id="rememberme" class="h-auto cursor-pointer"
                                           formControlName="rememberMe">
                                     <label for="rememberme" class="cursor-pointer">Remember me</label>
                               </div>
-                              <a routerLink="/forgot-password" class="text-[#1b83c1] float-right">Forget password?</a>
+                              <!-- <a routerLink="/forgot-password" class="text-[#1b83c1] float-right">Forget password?</a> -->
                         </div>
 
-                        <button type="submit" class="btn w-full bg-[#1b83c1] text-white" [disabled]="loading">
-                              <!-- <btn-spinner *ngIf="loading" [show]="loading"></btn-spinner> -->
-                              <span class="btn-text" [ngClass]="{'translate-x-0.5': loading}">
-                                    Sign in
-                              </span>
-                        </button>
+                        <app-submit-button [isLoading]="loading" [text]="'Sign in'"
+                              [class]="'btn w-full bg-[#1b83c1] text-white flex justify-center'"></app-submit-button>
                   </form>
                   <!-- 
                   <div class="text-sm text-gray-400">

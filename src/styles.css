@@ -220,7 +220,7 @@
 /* sticky table */
 .data-table {
   & .table-container {
-    height: 350px;
+    height: 400px;
     max-height: 412px;
     overflow: auto;
   }
@@ -336,4 +336,8 @@
 
 .custom_dropdown .ant-select-selection-item {
   font-size: 18px !important;
+}
+
+.cdk-overlay-pane {
+  max-height: 250px !important;
 }

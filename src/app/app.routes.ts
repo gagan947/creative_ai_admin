@@ -37,6 +37,26 @@ export const routes: Routes = [
                         canActivate: [RoleGuard],
                   },
                   {
+                        path: 'builder-cms/projects',
+                        loadComponent: () => import('./components/builderCMS/cms-projects/cms-projects.component').then(m => m.CmsProjectsComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
+                        path: 'builder-cms/Features',
+                        loadComponent: () => import('./components/builderCMS/cms-features/cms-features.component').then(m => m.CmsFeaturesComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
+                        path: 'builder-cms/feature-detail/:id',
+                        loadComponent: () => import('./components/builderCMS/cms-features/cms-feature-detail/cms-feature-detail.component').then(m => m.CmsFeatureDetailComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
+                        path: 'builder-cms/project-details/:id',
+                        loadComponent: () => import('./components/builderCMS/cms-projects/cms-project-details/cms-project-details.component').then(m => m.CmsProjectDetailsComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
                         path: 'projects/view/:id',
                         loadComponent: () => import('./components/projects/project-details/main/main.component').then(m => m.MainComponent),
                         children: [

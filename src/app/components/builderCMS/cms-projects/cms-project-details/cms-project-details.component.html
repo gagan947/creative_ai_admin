@@ -1,0 +1,96 @@
+<div class="card p-5">
+      <div class="flex justify-between items-center">
+            <div class="card-title flex items-center gap-2">
+                  <i class="bi bi-arrow-left font-bold cursor-pointer" (click)="location.back()"></i>
+                  <h3 class="text-lg font-bold leading-none mb-0">Projects</h3> / <h3 class="text-md leading-none mb-0">
+                        Features & Sub-Features</h3>
+            </div>
+            <button class="btn btn-xs bg-[#1b83c1] text-white" (click)="openModal()">
+                  @if (data.length === 0) {
+                  <i class="bi bi-plus"></i> Add New
+                  }@else {
+                  Edit
+                  }
+            </button>
+      </div>
+      <div class="mt-3">
+            <app-table [apiUrl]="url" [projectId]="id" [columns]="columns" (viewClicked)="onView($event)"
+                  (editClicked)="onEdit($event)" (deleteClicked)="onDelete($event)"></app-table>
+      </div>
+</div>
+
+
+<div class="modal" role="dialog" [attr.aria-modal]="showModal">
+      <div class="modal-backdrop"></div>
+      <div class="modal-wrapper">
+            <div class="modal-container">
+                  <div class="modal-box">
+                        <div class="bg-white p-10 sm:p-6 sm:pb-4 min-w-[40rem] h-[70vh] relative">
+                              <button class="absolute top-2 right-2" (click)="showModal = false">
+                                    <i class="bi bi-x text-lg"></i>
+                              </button>
+                              <h1 class="text-lg font-bold text-[#2b2b2b] mb-4 text-center">Add Features & Sub-Features
+                              </h1>
+                              <hr class="mb-5">
+                              <form>
+                                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+                                          <div>
+                                                <label for="project_name"
+                                                      class="block text-sm font-medium text-gray-700">
+                                                      Features & Sub-Features
+                                                </label>
+                                                <div class="relative w-full">
+                                                      <!-- Dropdown Display -->
+                                                      <div class="border px-4 py-2 rounded cursor-pointer"
+                                                            (click)="dropdownOpen = !dropdownOpen">
+                                                            {{ getFormattedSelectedLabels() }}
+                                                      </div>
+
+                                                      <!-- Tree Dropdown -->
+                                                      <div *ngIf="dropdownOpen"
+                                                            class="absolute z-auto mt-2 w-full border bg-white max-h-64 overflow-auto shadow-lg rounded">
+                                                            <div *ngFor="let feature of featuresSubFeaturesList"
+                                                                  class="p-2 border-b">
+                                                                  <!-- Feature Checkbox with indeterminate -->
+                                                                  <div class="flex items-center gap-2">
+                                                                        <input type="checkbox"
+                                                                              [checked]="isFeatureFullySelected(feature)"
+                                                                              [indeterminate]="isFeatureIndeterminate(feature)"
+                                                                              (change)="toggleFeatureSelection(feature)"
+                                                                              [id]="feature.featuresName" />
+                                                                        <label [for]="feature.featuresName"
+                                                                              class="font-semibold">{{ feature.featuresName }}</label>
+                                                                  </div>
+
+                                                                  <!-- SubFeatures -->
+                                                                  <div class="pl-6 mt-1 space-y-1">
+                                                                        <div *ngFor="let sub of feature.subFeatures"
+                                                                              class="flex items-center gap-2">
+                                                                              <input type="checkbox"
+                                                                                    [checked]="isSelected(sub)"
+                                                                                    (change)="toggleSubFeatureSelection(sub, feature)"
+                                                                                    [id]="sub.subFeaturesName" />
+                                                                              <label
+                                                                                    [for]="sub.subFeaturesName">{{ sub.subFeaturesName }}</label>
+                                                                        </div>
+                                                                  </div>
+                                                            </div>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                          <div class=" flex justify-end gap-4 items-center mt-5 sm:mt-6">
+                                                <button type="reset" class="btn bg-gray-500 text-white"
+                                                      (click)="onModalCloseHandler(false)">
+                                                      Cancel
+                                                </button>
+                                                <app-submit-button (click)="onSubmit()" [isLoading]="loading"
+                                                      [text]="'Save'"
+                                                      [class]="'btn bg-[#1b83c1] text-white'"></app-submit-button>
+                                          </div>
+                                    </div>
+                              </form>
+                        </div>
+                  </div>
+            </div>
+      </div>
+</div>

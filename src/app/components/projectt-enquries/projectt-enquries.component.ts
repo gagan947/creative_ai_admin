@@ -18,7 +18,7 @@ export class ProjecttEnquriesComponent {
   }
 
   ngOnInit(): void {
-    this.getData()
+    // this.getData()
   }
   getData() {
     this.url = 'getClientEnquiries'
@@ -33,6 +33,7 @@ export class ProjecttEnquriesComponent {
       { field: 'email', header: 'Email' },
       { field: 'phoneNumber', header: 'Contact' },
       { field: 'createdAt', header: 'Enquiry Date', pipe: 'date' },
+      { field: 'action', header: 'Action', isEdit: true, isDelete: true, isView: true },
     ]
   }
 

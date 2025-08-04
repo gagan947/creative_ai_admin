@@ -5,11 +5,12 @@ import { Router, RouterLink } from '@angular/router';
 import { CommonService } from '../../../services/common.service';
 import { AuthService } from '../../../services/auth.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { SubmitButtonComponent } from "../../shared/submit-button/submit-button.component";
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [FormsModule, CommonModule, ReactiveFormsModule, RouterLink, SubmitButtonComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -50,10 +51,10 @@ export class LoginComponent {
         password: this.Form.value.password
       }
 
-      this.srevice.postAPI('login', formData).subscribe({
+      this.srevice.postAPI('signIn', formData).subscribe({
         next: (resp: any) => {
           if (resp.success == true) {
-            this.auth.setToken(resp.token, resp.user_info.role_uuid);
+            this.auth.setToken(resp.data.token, '4e5d5b7c-38db-11ee-be56-0242ac120002');
             localStorage.setItem('userInfo', resp.user_info);
             this.router.navigate(['/admin/dashboard']);
             if (this.Form.value.rememberMe) {

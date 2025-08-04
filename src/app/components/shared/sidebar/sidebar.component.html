@@ -42,7 +42,7 @@
                 </li>
                 <li>
                     <a class="menu-item" routerLinkActive="active" ariaCurrentWhenActive="page">
-                        <span>Featurs</span>
+                        <span>Features</span>
                     </a>
                 </li>
             </ul>
@@ -91,6 +91,27 @@
                         <span>Website</span>
                     </a>
                 </li> -->
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="menu-item sub-menu" aria-expanded="false"
+                (click)="subMenuToggleHandler($event)">
+                <i class="bi bi-sliders2-vertical"></i>
+                <span>Builder CMS</span>
+            </a>
+            <ul class="sub-menu-item">
+                <li>
+                    <a routerLink="/admin/builder-cms/projects" class="menu-item" routerLinkActive="active"
+                        ariaCurrentWhenActive="page">
+                        <span>Projects</span>
+                    </a>
+                </li>
+                <li>
+                    <a routerLink="/admin/builder-cms/Features" class="menu-item" routerLinkActive="active"
+                        ariaCurrentWhenActive="page">
+                        <span>Features</span>
+                    </a>
+                </li>
             </ul>
         </li>
     </ul>

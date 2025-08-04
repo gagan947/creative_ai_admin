@@ -19,5 +19,9 @@ export class HeaderComponent {
     );
     this.renderer.setAttribute(profileDropdownList, 'aria-expanded', 'true');
   };
+
+  onLogout = () => {
+    this.router.navigate(['/']);
+  };
 }
 

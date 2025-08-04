@@ -12,34 +12,65 @@ import { CommonService } from '../../../services/common.service';
 })
 export class TableComponent {
   @Input() apiUrl!: string;
-  @Input() columns: { field: string; header: string; align?: string; width?: string; pipe?: string; isArray?: boolean }[] = [];
-  @Input() pageSizeOptions: number[] = [5, 10, 25];
-
+  @Input() columns: {
+    field: string;
+    header: string;
+    align?: string;
+    width?: string;
+    pipe?: string;
+    isArray?: boolean;
+    addClass?: string;
+    arrayField?: string;
+    isEdit?: boolean;
+    isDelete?: boolean;
+    isView?: boolean;
+    isFeatures?: boolean;
+    isAlbum?: boolean;
+  }[] = [];
+  @Input() pageSizeOptions: number[] = [10, 20, 25];
+  @Input() projectId?: any
+  @Input() featureId?: any
   @Output() viewClicked = new EventEmitter<any>();
   @Output() editClicked = new EventEmitter<any>();
   @Output() deleteClicked = new EventEmitter<any>();
+  @Output() featureViewClicked = new EventEmitter<any>();
 
   pagedData: any[] = [];
   totalRecords = 0;
   currentPage = 1;
   pageSize = this.pageSizeOptions[0];
-
+  isLoading: boolean = true;
   constructor(private service: CommonService, private datePipe: DatePipe,
     private currencyPipe: CurrencyPipe) { }
 
-  ngOnInit() {
+  // ngOnInit() {
+  //   this.fetchData();
+  // }
+
+  ngOnChanges(): void {
     this.fetchData();
   }
 
   fetchData() {
-    const params = {
-      _page: this.currentPage.toString(),
-      _limit: this.pageSize.toString()
+    this.isLoading = true
+    const params: any = {
+      page: this.currentPage.toString(),
+      limit: this.pageSize.toString()
     };
 
-    this.service.get<any[]>(this.apiUrl).subscribe((res: any) => {
+    if (this.projectId) {
+      params['projectId'] = this.projectId;
+    }
+    if (this.featureId) {
+      params['featureId'] = this.featureId;
+    }
+
+    this.service.get<any[]>(this.apiUrl, params).subscribe((res: any) => {
       this.pagedData = res.data || [];
-      this.totalRecords = this.pagedData.length;
+      this.totalRecords = res.totalRecords || 0;
+      this.isLoading = false
+    }, (err: any) => {
+      this.isLoading = false
     });
   }
 
@@ -69,6 +100,10 @@ export class TableComponent {
     this.deleteClicked.emit(row);
   }
 
+  emitFeaturesView(row: any) {
+    this.featureViewClicked.emit(row);
+  }
+
   applyPipe(value: any, pipeName: string, args: string = ''): any {
     switch (pipeName) {
       case 'date':
@@ -80,7 +115,10 @@ export class TableComponent {
     }
   }
 
-  parseData(data: string): string {
-    return JSON.parse(data)?.join(' | ')
+  parseData(array: any[], key: string): string {
+    if (!Array.isArray(array) || !key) return 'N/A';
+
+    const values = array.map(item => item?.[key]).filter(Boolean);
+    return values.length ? values.join(' | ') : 'N/A';
   }
 }

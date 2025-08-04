@@ -14,8 +14,8 @@ export class CommonService {
 
   constructor(private http: HttpClient, private router: Router) { }
 
-  get<T>(url: string): Observable<T> {
-    return this.http.get<T>(this.baseUrl + url);
+  get<T>(url: string, params?: any): Observable<T> {
+    return this.http.get<T>(this.baseUrl + url, { params });
   };
 
   postAPI<T, U>(url: string, data: U): Observable<T> {

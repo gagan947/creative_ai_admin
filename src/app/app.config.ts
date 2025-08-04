@@ -4,6 +4,7 @@ import { routes } from './app.routes';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { HttpInterceptorService } from './interceptors/http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
 
 const scrollConfig: InMemoryScrollingOptions = {
   scrollPositionRestoration: 'top',
@@ -21,5 +22,6 @@ export const appConfig: ApplicationConfig = {
     useClass: HttpInterceptorService,
     multi: true,
   },
+  provideNzI18n(en_US),
   ]
 };

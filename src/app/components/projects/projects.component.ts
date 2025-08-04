@@ -24,8 +24,7 @@ export class ProjectsComponent {
   }
 
   ngOnInit(): void {
-    this.getData()
-
+    // this.getData()
   }
 
   initForm() {
@@ -48,6 +47,7 @@ export class ProjectsComponent {
       { field: 'start_date', header: 'Start Date', pipe: 'date' },
       { field: 'deadline', header: 'End Date', pipe: 'date' },
       { field: 'priority', header: 'Priority' },
+      { field: 'action', header: 'Action', isEdit: true, isDelete: true, isView: true },
     ]
   }
 

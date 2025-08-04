@@ -24,9 +24,8 @@ export class TeamsComponent {
   }
 
   ngOnInit(): void {
-    this.getRoles()
-    this.getData()
-
+    // this.getRoles()
+    // this.getData()
   }
 
   initForm() {
@@ -48,6 +47,7 @@ export class TeamsComponent {
       { field: 'phone_no', header: 'Phone Number' },
       { field: 'role_name', header: 'Role' },
       { field: 'created_at', header: 'Join Date', pipe: 'date' },
+      { field: 'action', header: 'Action', isEdit: true, isDelete: true, isView: true },
     ]
   }
 

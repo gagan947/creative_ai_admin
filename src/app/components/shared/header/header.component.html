@@ -1,6 +1,6 @@
 <div class="container-fluid">
 
-    <header class="bg-white py-3 px-8 shadow-md sticky top-0 admin-navbar">
+    <header class="bg-white py-1 px-8 shadow-md sticky top-0 admin-navbar">
         <div class="flex justify-between items-center">
             <div class="flex justify-start items-center gap-x-3"></div>
             <div class="flex justify-end items-center gap-x-3">
@@ -14,10 +14,10 @@
                 <div class="relative inline-block profile-dropdown">
                     <div class="flex items-center">
                         <button type="button" (click)="onClickProfile()"
-                            class="flex w-10 h-10 overflow-hidden rounded-full border-2 border-[#1b83c1] shadow">
+                            class="flex w-8 h-8 overflow-hidden rounded-full border-2 border-[#1b83c1] shadow">
                             <img src="assets/images/np_pro.png" alt="john doe" class="w-full object-cover">
                         </button>
-                        <div class="text-left ml-3">
+                        <div class="text-left ml-3 text-xs">
                             <p class="m-0">johndoe</p>
                             <p class="text-light text-xs m-0">Administrator</p>
                         </div>
@@ -53,7 +53,7 @@
                         </div>
                         <div class="border-t border-slate-500/30"></div>
                         <div class="">
-                            <button type="button"
+                            <button type="button" (click)="onLogout()"
                                 class="w-full p-2 text-left text-sm text-red-400 font-semibold rounded transition hover:bg-slate-200">
                                 <i class="bi bi-power"></i>
                                 Logout

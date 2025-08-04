@@ -1,4 +1,4 @@
 export const environment = {
       production: true,
-      apiUrl: 'http://192.168.29.241:4004/api/creative/'
+      apiUrl: 'https://bbpqirh4sk.execute-api.eu-north-1.amazonaws.com/prod/api/admin/'
 };
