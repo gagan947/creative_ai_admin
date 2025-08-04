@@ -5,6 +5,7 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import { HttpInterceptorService } from './interceptors/http.interceptor';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { en_US, provideNzI18n } from 'ng-zorro-antd/i18n';
+import { CacheInterceptor } from './interceptors/cache.interceptor';
 
 const scrollConfig: InMemoryScrollingOptions = {
   scrollPositionRestoration: 'top',
@@ -20,6 +21,11 @@ export const appConfig: ApplicationConfig = {
   {
     provide: HTTP_INTERCEPTORS,
     useClass: HttpInterceptorService,
+    multi: true,
+  },
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: CacheInterceptor,
     multi: true,
   },
   provideNzI18n(en_US),
