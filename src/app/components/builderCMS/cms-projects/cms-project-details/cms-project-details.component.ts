@@ -25,7 +25,9 @@ export class CmsProjectDetailsComponent {
   dropdownOpen: boolean = false
   selectedFeatures: { featureId: number, subFeatureIds: number[] }[] = [];
   data: any[] = []
+  currentRouteName: string = ''
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
+    this.currentRouteName = sessionStorage.getItem('currentRouteName') || ''
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id') || '';
     });

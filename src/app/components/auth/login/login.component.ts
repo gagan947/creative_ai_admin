@@ -55,7 +55,7 @@ export class LoginComponent {
         next: (resp: any) => {
           if (resp.success == true) {
             this.auth.setToken(resp.data.token, '4e5d5b7c-38db-11ee-be56-0242ac120002');
-            localStorage.setItem('userInfo', resp.user_info);
+            localStorage.setItem('userInfo', JSON.stringify(resp.data.users[0]));
             this.router.navigate(['/admin/dashboard']);
             if (this.Form.value.rememberMe) {
               localStorage.setItem('SavedEmail', this.Form.value.email);

@@ -14,6 +14,7 @@ export const routes: Routes = [
       {
             path: 'admin',
             loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
+            canActivate: [RoleGuard],
             children: [
                   {
                         path: 'dashboard',

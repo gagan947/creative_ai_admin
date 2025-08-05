@@ -132,6 +132,7 @@ export class CmsProjectsComponent {
   }
 
   onFeaturesView(event: any) {
+    sessionStorage.setItem('currentRouteName', event.projectName)
     this.router.navigate([`/admin/builder-cms/project-details/${event.id}`])
   }
 

@@ -220,8 +220,7 @@
 /* sticky table */
 .data-table {
   & .table-container {
-    height: 400px;
-    max-height: 412px;
+    height: calc(100vh - 225px);
     overflow: auto;
   }
 

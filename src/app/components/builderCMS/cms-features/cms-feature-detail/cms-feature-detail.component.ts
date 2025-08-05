@@ -22,9 +22,11 @@ export class CmsFeatureDetailComponent {
   url: string = ''
   id: string = ''
   estimatedTimeList: number[] = Array.from({ length: 61 }, (_, i) => i + 1);
-  subFeatureId: number | null = null
+  subFeatureId: number | null = null;
+  currentRouteName: string = ''
 
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
+    this.currentRouteName = sessionStorage.getItem('currentRouteName') || ''
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id') || '';
     });

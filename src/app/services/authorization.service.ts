@@ -7,10 +7,15 @@ import { Permission } from '../models/role.model';
 export class AuthorizationService {
       constructor(private authService: AuthService) { }
 
-      getRoutePermissions(route: string): Permission {
+      getRoutePermissions(path: string): Permission {
+            const segments = path.split('/');
+            if (!isNaN(Number(segments[segments.length - 1]))) {
+                  segments.pop();
+            }
+            const normalizedPath = segments.join('/');
             const roleUUID = this.authService.getRoleUUID();
             const allPermissions = ROLE_PERMISSIONS[roleUUID || ''] || {};
-            return allPermissions[route] || {};
+            return allPermissions[normalizedPath] || {};
       }
 
       hasRoutePermission(route: string, action: keyof Permission): boolean {

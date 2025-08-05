@@ -8,10 +8,12 @@ import { Router } from '@angular/router';
   standalone: true
 })
 export class HeaderComponent {
-
+  userData: any
   constructor(
     private element: ElementRef, private renderer: Renderer2,
-    private router: Router) { }
+    private router: Router) {
+    this.userData = JSON.parse(localStorage.getItem('userInfo') || '{}');
+  }
 
   onClickProfile = () => {
     const profileDropdownList = this.element.nativeElement.querySelector(

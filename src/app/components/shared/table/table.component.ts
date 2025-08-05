@@ -1,7 +1,9 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
-import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { debounce } from 'lodash';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-table',
@@ -42,23 +44,33 @@ export class TableComponent {
   currentPage = 1;
   pageSize = this.pageSizeOptions[0];
   isLoading: boolean = true;
+  searchQuery: string = ''
   constructor(private service: CommonService, private datePipe: DatePipe,
-    private currencyPipe: CurrencyPipe, private modal: NzModalService) { }
+    private currencyPipe: CurrencyPipe, private modal: NzModalService, private router: Router, private route: ActivatedRoute) { }
 
   // ngOnInit() {
   //   this.fetchData();
   // }
 
   ngOnChanges(): void {
-    this.fetchData();
+    this.route.queryParams.subscribe(params => {
+      this.currentPage = +params['page'] || 1;
+      this.pageSize = +params['pageSize'] || 10;
+      this.fetchData();
+    });
+    // this.fetchData();
   }
 
   fetchData() {
     this.isLoading = true
     const params: any = {
       page: this.currentPage.toString(),
-      limit: this.pageSize.toString()
+      limit: this.pageSize.toString(),
     };
+
+    if (this.searchQuery !== '') {
+      params['search'] = this.searchQuery;
+    }
 
     if (this.projectId) {
       params['projectId'] = this.projectId;
@@ -78,7 +90,21 @@ export class TableComponent {
 
   onPageChange(page: number) {
     this.currentPage = page;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        page: this.currentPage,
+        pageSize: this.pageSize,
+      },
+      queryParamsHandling: 'merge',
+    });
+
     this.fetchData();
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalRecords / this.pageSize);
   }
 
   onPageSizeChange(event: any) {
@@ -135,4 +161,9 @@ export class TableComponent {
     const values = array.map(item => item?.[key]).filter(Boolean);
     return values.length ? values.join(' | ') : 'N/A';
   }
+
+  search = debounce((event: any) => {
+    this.searchQuery = event.target.value.trim();
+    this.fetchData();
+  }, 500);
 }

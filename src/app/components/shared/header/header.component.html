@@ -18,7 +18,7 @@
                             <img src="assets/images/np_pro.png" alt="john doe" class="w-full object-cover">
                         </button>
                         <div class="text-left ml-3 text-xs">
-                            <p class="m-0">johndoe</p>
+                            <p class="m-0">{{userData?.name}}</p>
                             <p class="text-light text-xs m-0">Administrator</p>
                         </div>
                     </div>
@@ -31,12 +31,12 @@
                             </div>
                             <div>
                                 <div class="flex gap-1 text-sm font-semibold">
-                                    <span>John Doe</span>
+                                    <span>{{userData?.name}}</span>
                                     <span class="text-[#1b83c1]">
                                         <i class="bi bi-check2-circle"></i>
                                     </span>
                                 </div>
-                                <div class="text-xs text-slate-400">john.deo&#64;email.com</div>
+                                <div class="text-xs text-slate-400">{{userData?.email}}</div>
                             </div>
                         </div>
                         <div class="border-t border-slate-500/30"></div>
