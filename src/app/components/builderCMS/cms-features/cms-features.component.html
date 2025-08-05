@@ -20,8 +20,13 @@
       <div class="modal-wrapper">
             <div class="modal-container">
                   <div class="modal-box">
-                        <div class="bg-white p-10 sm:p-6 sm:pb-4 min-w-[40rem]">
-                              <h1 class="text-lg font-bold text-[#2b2b2b] mb-4 text-center">Add New Feature </h1>
+                        <div class="bg-white p-10 sm:p-6 sm:pb-4 min-w-[40rem] relative">
+                              <button class="absolute top-2 right-2" (click)="onModalCloseHandler(false)">
+                                    <i class="bi bi-x text-lg"></i>
+                              </button>
+                              <h1 class="text-lg font-bold text-[#2b2b2b] mb-4 text-center">
+                                    {{featureId ? 'Update' : 'Add New'}} Feature
+                              </h1>
                               <hr class="mb-5">
                               <form [formGroup]="Form" (ngSubmit)="onSubmit()">
                                     <div class="grid grid-cols-1 md:grid-cols-1 gap-4">

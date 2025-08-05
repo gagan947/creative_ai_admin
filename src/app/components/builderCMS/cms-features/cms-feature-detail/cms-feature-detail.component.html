@@ -21,11 +21,16 @@
       <div class="modal-wrapper">
             <div class="modal-container">
                   <div class="modal-box">
-                        <div class="bg-white p-10 sm:p-6 sm:pb-4 min-w-[60rem]">
-                              <h1 class="text-2xl font-bold text-[#2b2b2b] mb-4 text-center">Add New Sub-Feature</h1>
+                        <div class="bg-white p-10 sm:p-6 sm:pb-4 min-w-[60rem] relative">
+                              <button class="absolute top-2 right-2" (click)="onModalCloseHandler(false)">
+                                    <i class="bi bi-x text-lg"></i>
+                              </button>
+                              <h1 class="text-2xl font-bold text-[#2b2b2b] mb-4 text-center">
+                                    {{subFeatureId ? 'Update' : 'Add New'}} Sub-Feature
+                              </h1>
                               <hr class="mb-5">
                               <form [formGroup]="Form" (ngSubmit)="onSubmit()">
-                                    <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                           <div>
                                                 <label for="subFeature_name"
                                                       class="block text-sm font-medium text-gray-700">
@@ -37,8 +42,26 @@
                                                 <div *ngIf="Form.controls['subFeature_name'].invalid && Form.controls['subFeature_name'].touched"
                                                       class="error-message">
                                                       <div *ngIf="Form.controls['subFeature_name'].errors?.['required']"
-                                                            class="ct_fs_14 mt-1">
+                                                            class="text-xs mt-1">
                                                             Project name is required.
+                                                      </div>
+                                                </div>
+                                          </div>
+                                          <div>
+                                                <label for="subFeature_name"
+                                                      class="block text-sm font-medium text-gray-700">
+                                                      Estimated Time (Hours)
+                                                </label>
+                                                <nz-select formControlName="estimatedTime" class="form-control w-full"
+                                                      nzPlaceHolder="Select">
+                                                      <nz-option *ngFor="let time of estimatedTimeList" [nzValue]="time"
+                                                            [nzLabel]="time"></nz-option>
+                                                </nz-select>
+                                                <div *ngIf="Form.controls['estimatedTime'].invalid && Form.controls['estimatedTime'].touched"
+                                                      class="error-message">
+                                                      <div *ngIf="Form.controls['estimatedTime'].errors?.['required']"
+                                                            class="text-xs mt-1">
+                                                            Estimated time is required.
                                                       </div>
                                                 </div>
                                           </div>

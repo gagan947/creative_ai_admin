@@ -25,8 +25,11 @@ export class CmsProjectsComponent {
   projectData: any
   LogoImage: File | null = null;
   logoPreview: string | null = null;
-  projectId: number | null = null
-
+  projectId: number | null = null;
+  previewProductImages: any[] = [];
+  submitted: boolean = false
+  showImagesModal: boolean = false
+  productImages: File[] = [];
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router) {
     this.initForm()
   }
@@ -66,15 +69,15 @@ export class CmsProjectsComponent {
     if (this.projectId) {
       apiUrl = 'updateProjects'
       formData.append('projectId', this.projectId.toString())
-      formData.append('projectName', this.Form.value.project_name)
-      formData.append('description', this.Form.value.project_description)
+      formData.append('projectName', this.Form.value.project_name.trim())
+      formData.append('description', this.Form.value.project_description.trim())
       if (this.LogoImage) {
         formData.append('projectImage', this.LogoImage)
       }
     } else {
       apiUrl = 'insertOnboardProjects'
-      formData.append('projectName', this.Form.value.project_name)
-      formData.append('description', this.Form.value.project_description)
+      formData.append('projectName', this.Form.value.project_name.trim())
+      formData.append('description', this.Form.value.project_description.trim())
       if (this.LogoImage) {
         formData.append('projectImage', this.LogoImage)
       }
@@ -87,7 +90,8 @@ export class CmsProjectsComponent {
         this.onModalCloseHandler(false)
         this.Form.reset()
         this.LogoImage = this.logoPreview = null
-        this.loading = false
+        this.loading = false;
+        this.projectId = null
       } else {
         this.toastr.warning(res.message)
         this.loading = false
@@ -123,10 +127,21 @@ export class CmsProjectsComponent {
 
   onModalCloseHandler(event: any) {
     this.showModal = event;
+    this.showViewModal = event
+    this.showImagesModal = event
   }
 
   onFeaturesView(event: any) {
     this.router.navigate([`/admin/builder-cms/project-details/${event.id}`])
+  }
+
+  onAlbumUpload(event: any) {
+    this.service.get('getProjectTemplates', { id: event.id }).subscribe((res: any) => {
+      this.previewProductImages = res.data;
+      this.showImagesModal = true
+      this.projectId = event.id
+    })
+
   }
 
   onFileSelected(event: any) {
@@ -142,5 +157,72 @@ export class CmsProjectsComponent {
   removeProjectImage() {
     this.logoPreview = null;
     this.LogoImage = null;
+  }
+
+  onProductImage(event: any) {
+    const files = event.target.files;
+    Array.from(files).forEach((file: any, i: any) => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewProductImages.push({
+          imageUrl: e.target.result,
+          id: i + 1
+        });
+      };
+      reader.readAsDataURL(file);
+      this.productImages.push(file);
+    });
+  }
+
+  removeProjectImages(index: number, item: any) {
+    if (item.projectId) {
+      this.loading = true
+      this.service.get('deleteImageById', { id: item.id }).subscribe((res: any) => {
+        if (res.success) {
+          this.previewProductImages.splice(index, 1);
+          this.loading = false
+        } else {
+          this.loading = false
+        }
+      })
+    } else {
+      this.previewProductImages.splice(index, 1);
+      this.productImages.splice(index, 1);
+    }
+
+  }
+
+  uploadProjectTemplateImages() {
+
+    if (this.productImages.length == 0) {
+      this.submitted = true
+      return
+    }
+
+    this.loading = true
+    let formData = new FormData()
+    formData.append('projectId', this.projectId!.toString())
+    for (let i = 0; i < this.productImages.length; i++) {
+      formData.append('projectImage', this.productImages[i]);
+    }
+
+    this.service.postAPI('addProjectTemplateImages', formData).subscribe((res: any) => {
+      if (res.success == true) {
+        this.toastr.success(res.message)
+        this.getData()
+        this.onModalCloseHandler(false)
+        this.loading = false
+        this.productImages = []
+        this.previewProductImages = []
+        this.projectId = null
+      } else {
+        this.toastr.warning(res.message)
+        this.loading = false
+      }
+    },
+      (err: any) => {
+        this.toastr.error(err)
+        this.loading = false
+      })
   }
 }

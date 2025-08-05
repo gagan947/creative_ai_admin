@@ -7,11 +7,11 @@ import { CommonService } from '../../../../services/common.service';
 import { NoWhitespaceDirective } from '../../../../validators';
 import { TableComponent } from '../../../shared/table/table.component';
 import { SubmitButtonComponent } from '../../../shared/submit-button/submit-button.component';
-
+import { NzSelectModule } from 'ng-zorro-antd/select';
 @Component({
   selector: 'app-cms-feature-detail',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, TableComponent, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, TableComponent, SubmitButtonComponent, NzSelectModule],
   templateUrl: './cms-feature-detail.component.html',
   styleUrl: './cms-feature-detail.component.css'
 })
@@ -21,6 +21,9 @@ export class CmsFeatureDetailComponent {
   columns: any[] = []
   url: string = ''
   id: string = ''
+  estimatedTimeList: number[] = Array.from({ length: 61 }, (_, i) => i + 1);
+  subFeatureId: number | null = null
+
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
     this.route.paramMap.subscribe(params => {
       this.id = params.get('id') || '';
@@ -35,6 +38,7 @@ export class CmsFeatureDetailComponent {
   initForm() {
     this.Form = new FormGroup({
       subFeature_name: new FormControl('', [Validators.required, NoWhitespaceDirective.validate]),
+      estimatedTime: new FormControl(null, [Validators.required]),
     })
   }
 
@@ -43,6 +47,7 @@ export class CmsFeatureDetailComponent {
     this.columns = [
       { field: '', header: 'S. No' },
       { field: 'subFeaturesName', header: 'Sub Feature' },
+      { field: 'estimated_time', header: 'Estimated Time' },
       { field: 'action', header: 'Action', isEdit: true, isDelete: true, isView: false },
     ]
   }
@@ -53,16 +58,31 @@ export class CmsFeatureDetailComponent {
       return
     }
     this.loading = true
-    let formData = {
-      featureId: this.id,
-      subFeatureName: this.Form.value.subFeature_name
+    let formData = {}
+    let apiUrl = ''
+    if (this.subFeatureId) {
+      apiUrl = 'updateSubFeatures'
+      formData = {
+        id: this.subFeatureId,
+        subFeatureName: this.Form.value.subFeature_name.trim(),
+        estimatedTime: this.Form.value.estimatedTime
+      }
+    } else {
+      apiUrl = 'addSubFeature'
+      formData = {
+        featureId: this.id,
+        subFeatureName: this.Form.value.subFeature_name.trim(),
+        estimatedTime: this.Form.value.estimatedTime
+      }
     }
-    this.service.postAPI('addSubFeature', formData).subscribe((res: any) => {
+    this.service.postAPI(apiUrl, formData).subscribe((res: any) => {
       if (res.success == true) {
         this.toastr.success(res.message)
         this.getData()
         this.onModalCloseHandler(false)
         this.loading = false
+        this.Form.reset()
+        this.subFeatureId = null
       } else {
         this.toastr.warning(res.message)
         this.loading = false
@@ -79,11 +99,23 @@ export class CmsFeatureDetailComponent {
   }
 
   onEdit(event: any) {
-    console.log(event);
+    this.subFeatureId = event.id
+    this.showModal = true
+    this.Form.patchValue({
+      subFeature_name: event.subFeaturesName,
+      estimatedTime: Number(event.estimated_time)
+    })
   }
 
   onDelete(event: any) {
-    console.log(event);
+    this.service.get('deleteSubFeature', { id: event.id }).subscribe((res: any) => {
+      if (res.success == true) {
+        this.toastr.success(res.message)
+        this.getData()
+      } else {
+        this.toastr.warning(res.message)
+      }
+    })
   }
 
   showModal: boolean = false;
@@ -93,5 +125,7 @@ export class CmsFeatureDetailComponent {
 
   onModalCloseHandler(event: any) {
     this.showModal = event;
+    this.subFeatureId = null
+    this.Form.reset()
   }
 }

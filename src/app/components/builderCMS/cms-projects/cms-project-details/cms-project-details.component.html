@@ -67,7 +67,7 @@
                                                                         <div *ngFor="let sub of feature.subFeatures"
                                                                               class="flex items-center gap-2">
                                                                               <input type="checkbox"
-                                                                                    [checked]="isSelected(sub)"
+                                                                                    [checked]="isSelected(sub, feature)"
                                                                                     (change)="toggleSubFeatureSelection(sub, feature)"
                                                                                     [id]="sub.subFeaturesName" />
                                                                               <label

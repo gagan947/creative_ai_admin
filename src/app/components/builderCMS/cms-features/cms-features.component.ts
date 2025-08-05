@@ -20,6 +20,7 @@ export class CmsFeaturesComponent {
   loading: boolean = false
   columns: any[] = []
   url: string = ''
+  featureId: number | null = null
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location) {
     this.initForm()
   }
@@ -50,7 +51,23 @@ export class CmsFeaturesComponent {
       return
     }
     this.loading = true
-    this.service.postAPI('addFeature', this.Form.value).subscribe((res: any) => {
+
+    let formData = {}
+    let apiUrl = ''
+    if (this.featureId) {
+      apiUrl = 'updateFeatures'
+      formData = {
+        id: this.featureId,
+        featureName: this.Form.value.featureName.trim(),
+      }
+    } else {
+      apiUrl = 'addFeature'
+      formData = {
+        featureName: this.Form.value.featureName.trim(),
+      }
+    }
+
+    this.service.postAPI(apiUrl, formData).subscribe((res: any) => {
       if (res.success == true) {
         this.toastr.success(res.message)
         this.getData()
@@ -72,11 +89,22 @@ export class CmsFeaturesComponent {
   }
 
   onEdit(event: any) {
-    console.log(event);
+    this.featureId = event.id
+    this.showModal = true
+    this.Form.patchValue({
+      featureName: event.featuresName,
+    })
   }
 
   onDelete(event: any) {
-    console.log(event);
+    this.service.get('deleteFeatures', { id: event.id }).subscribe((res: any) => {
+      if (res.success == true) {
+        this.toastr.success(res.message)
+        this.getData()
+      } else {
+        this.toastr.warning(res.message)
+      }
+    })
   }
 
   showModal: boolean = false;
@@ -86,5 +114,7 @@ export class CmsFeaturesComponent {
 
   onModalCloseHandler(event: any) {
     this.showModal = event;
+    this.featureId = null
+    this.Form.reset()
   }
 }

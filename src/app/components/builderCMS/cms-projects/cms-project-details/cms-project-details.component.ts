@@ -23,7 +23,7 @@ export class CmsProjectDetailsComponent {
   featuresSubFeaturesList: any[] = []
   value: any[] = []
   dropdownOpen: boolean = false
-  selectedSubFeatureIds: number[] = [];
+  selectedFeatures: { featureId: number, subFeatureIds: number[] }[] = [];
   data: any[] = []
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
     this.route.paramMap.subscribe(params => {
@@ -53,24 +53,24 @@ export class CmsProjectDetailsComponent {
 
     this.service.get<any[]>(`fetchFeaturesById?projectId=${this.id}`).subscribe((res: any) => {
       this.data = res.data || [];
-      this.selectedSubFeatureIds = this.data.map(feature => feature.subFeatures.map((sub: { subFeatureId: any; }) => sub.subFeatureId)).flat();
+      this.selectedFeatures = this.data.map(feature => feature.subFeatures.map((sub: { subFeatureId: any; }) => sub.subFeatureId)).flat();
     })
   }
 
   onSubmit() {
-    if (this.selectedSubFeatureIds.length == 0) {
+    if (this.selectedFeatures.length == 0) {
       this.toastr.warning('Please select at least one subfeature')
       return
     }
     this.loading = true
     let formData = {
       projectId: this.id,
-      subFeatureIds: this.selectedSubFeatureIds
+      featureData: this.selectedFeatures
     }
     this.service.postAPI('insertProjectSubFeatures', formData).subscribe((res: any) => {
       if (res.success == true) {
         this.toastr.success(res.message)
-        this.selectedSubFeatureIds = []
+        this.selectedFeatures = []
         this.getData()
         this.onModalCloseHandler(false)
         this.loading = false
@@ -106,70 +106,89 @@ export class CmsProjectDetailsComponent {
     this.showModal = event;
   }
 
-  isSelected(sub: any): boolean {
-    return this.selectedSubFeatureIds.includes(sub.id);
+  isSelected(sub: any, feature: any): boolean {
+    const found = this.selectedFeatures.find(f => f.featureId === feature.id);
+    return found ? found.subFeatureIds.includes(sub.id) : false;
   }
 
-  // ✅ Toggle subfeature selection
   toggleSubFeatureSelection(sub: any, feature: any) {
-    const index = this.selectedSubFeatureIds.indexOf(sub.id);
-    if (index > -1) {
-      this.selectedSubFeatureIds.splice(index, 1);
+    const featureEntry = this.selectedFeatures.find(f => f.featureId === feature.id);
+
+    if (featureEntry) {
+      const index = featureEntry.subFeatureIds.indexOf(sub.id);
+      if (index > -1) {
+        featureEntry.subFeatureIds.splice(index, 1);
+      } else {
+        featureEntry.subFeatureIds.push(sub.id);
+      }
+
+      if (featureEntry.subFeatureIds.length === 0) {
+        this.selectedFeatures = this.selectedFeatures.filter(f => f.featureId !== feature.id);
+      }
     } else {
-      this.selectedSubFeatureIds.push(sub.id);
+      this.selectedFeatures.push({ featureId: feature.id, subFeatureIds: [sub.id] });
     }
   }
 
-  // ✅ Toggle feature selection
   toggleFeatureSelection(feature: any) {
     const allSelected = this.isFeatureFullySelected(feature);
-    feature.subFeatures.forEach((sub: { id: number; }) => {
-      const index = this.selectedSubFeatureIds.indexOf(sub.id);
-      if (allSelected && index > -1) {
-        this.selectedSubFeatureIds.splice(index, 1);
-      } else if (!allSelected && index === -1) {
-        this.selectedSubFeatureIds.push(sub.id);
+
+    if (allSelected) {
+      this.selectedFeatures = this.selectedFeatures.filter(f => f.featureId !== feature.id);
+    } else {
+      const subFeatureIds = feature.subFeatures.map((sub: any) => sub.id);
+      const existing = this.selectedFeatures.find(f => f.featureId === feature.id);
+
+      if (existing) {
+        existing.subFeatureIds = subFeatureIds;
+      } else {
+        this.selectedFeatures.push({ featureId: feature.id, subFeatureIds });
+      }
+    }
+  }
+
+  isFeatureFullySelected(feature: any): boolean {
+    const selected = this.selectedFeatures.find(f => f.featureId === feature.id);
+    return selected ? selected.subFeatureIds.length === feature.subFeatures.length : false;
+  }
+
+  isFeatureIndeterminate(feature: any): boolean {
+    const selected = this.selectedFeatures.find(f => f.featureId === feature.id);
+    return selected ? selected.subFeatureIds.length > 0 && selected.subFeatureIds.length < feature.subFeatures.length : false;
+  }
+
+  getSelectedLabels(): string[] {
+    const labels: string[] = [];
+
+    this.selectedFeatures.forEach(selected => {
+      const feature = this.featuresSubFeaturesList.find(f => f.id === selected.featureId);
+      if (feature) {
+        selected.subFeatureIds.forEach(subId => {
+          const sub = feature.subFeatures.find((s: any) => s.id === subId);
+          if (sub) labels.push(sub.subFeaturesName);
+        });
       }
     });
-  }
 
-  // ✅ All subfeatures selected
-  isFeatureFullySelected(feature: any): boolean {
-    return feature.subFeatures.every((sub: { id: number; }) => this.selectedSubFeatureIds.includes(sub.id));
-  }
-
-  // ✅ Some subfeatures selected (for indeterminate state)
-  isFeatureIndeterminate(feature: any): boolean {
-    const selectedCount = feature.subFeatures.filter((sub: { id: number; }) =>
-      this.selectedSubFeatureIds.includes(sub.id)
-    ).length;
-    return selectedCount > 0 && selectedCount < feature.subFeatures.length;
-  }
-
-  // ✅ Display selected labels
-  getSelectedLabels(): string[] {
-    let labels: string[] = [];
-    this.featuresSubFeaturesList.forEach(feature => {
-      feature.subFeatures.forEach((sub: { id: number; subFeaturesName: string; }) => {
-        if (this.selectedSubFeatureIds.includes(sub.id)) {
-          labels.push(sub.subFeaturesName);
-        }
-      });
-    });
     return labels;
   }
 
   getFormattedSelectedLabels(): string {
     const groupMap: { [feature: string]: string[] } = {};
 
-    // Group selected subfeatures by feature
-    this.featuresSubFeaturesList.forEach(feature => {
-      const selectedSubs = feature.subFeatures
-        .filter((sub: { id: number; }) => this.selectedSubFeatureIds.includes(sub.id))
-        .map((sub: { subFeaturesName: any; }) => sub.subFeaturesName);
+    this.selectedFeatures.forEach(selected => {
+      const feature = this.featuresSubFeaturesList.find(f => f.id === selected.featureId);
+      if (feature) {
+        const subNames = selected.subFeatureIds
+          .map(id => {
+            const sub = feature.subFeatures.find((s: any) => s.id === id);
+            return sub?.subFeaturesName;
+          })
+          .filter(Boolean);
 
-      if (selectedSubs.length) {
-        groupMap[feature.featuresName] = selectedSubs;
+        if (subNames.length > 0) {
+          groupMap[feature.featuresName] = subNames;
+        }
       }
     });
 
@@ -184,10 +203,9 @@ export class CmsProjectDetailsComponent {
       const visibleSubs = subs.slice(0, maxVisibleSubFeatures);
       const remainingSubs = subs.length - maxVisibleSubFeatures;
 
-      const subText =
-        remainingSubs > 0
-          ? `${visibleSubs.join(', ')}, +${remainingSubs} more`
-          : visibleSubs.join(', ');
+      const subText = remainingSubs > 0
+        ? `${visibleSubs.join(', ')}, +${remainingSubs} more`
+        : visibleSubs.join(', ');
 
       return `${feature} (${subText})`;
     });

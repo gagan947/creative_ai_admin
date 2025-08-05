@@ -23,11 +23,11 @@ export const appConfig: ApplicationConfig = {
     useClass: HttpInterceptorService,
     multi: true,
   },
-  {
-    provide: HTTP_INTERCEPTORS,
-    useClass: CacheInterceptor,
-    multi: true,
-  },
+  // {
+  //   provide: HTTP_INTERCEPTORS,
+  //   useClass: CacheInterceptor,
+  //   multi: true,
+  // },
   provideNzI18n(en_US),
   ]
 };

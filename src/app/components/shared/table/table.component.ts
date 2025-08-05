@@ -1,6 +1,7 @@
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonService } from '../../../services/common.service';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-table',
@@ -8,7 +9,7 @@ import { CommonService } from '../../../services/common.service';
   imports: [CommonModule],
   templateUrl: './table.component.html',
   styleUrl: './table.component.css',
-  providers: [DatePipe, CurrencyPipe]
+  providers: [DatePipe, CurrencyPipe, NzModalService]
 })
 export class TableComponent {
   @Input() apiUrl!: string;
@@ -34,6 +35,7 @@ export class TableComponent {
   @Output() editClicked = new EventEmitter<any>();
   @Output() deleteClicked = new EventEmitter<any>();
   @Output() featureViewClicked = new EventEmitter<any>();
+  @Output() albumUploadClicked = new EventEmitter<any>();
 
   pagedData: any[] = [];
   totalRecords = 0;
@@ -41,7 +43,7 @@ export class TableComponent {
   pageSize = this.pageSizeOptions[0];
   isLoading: boolean = true;
   constructor(private service: CommonService, private datePipe: DatePipe,
-    private currencyPipe: CurrencyPipe) { }
+    private currencyPipe: CurrencyPipe, private modal: NzModalService) { }
 
   // ngOnInit() {
   //   this.fetchData();
@@ -97,11 +99,24 @@ export class TableComponent {
     this.editClicked.emit(row);
   }
   emitDelete(row: any) {
-    this.deleteClicked.emit(row);
+    this.modal.confirm({
+      nzTitle: 'Are you sure you want to delete this item?',
+      nzContent: '<p style="color: red;"> This action cannot be undone.</p>',
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => this.deleteClicked.emit(row),
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel')
+    });
   }
 
   emitFeaturesView(row: any) {
     this.featureViewClicked.emit(row);
+  }
+
+  emitAlbumUpload(row: any) {
+    this.albumUploadClicked.emit(row);
   }
 
   applyPipe(value: any, pipeName: string, args: string = ''): any {
@@ -117,7 +132,6 @@ export class TableComponent {
 
   parseData(array: any[], key: string): string {
     if (!Array.isArray(array) || !key) return 'N/A';
-
     const values = array.map(item => item?.[key]).filter(Boolean);
     return values.length ? values.join(' | ') : 'N/A';
   }
