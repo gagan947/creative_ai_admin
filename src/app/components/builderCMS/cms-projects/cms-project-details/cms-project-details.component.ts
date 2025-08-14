@@ -26,6 +26,7 @@ export class CmsProjectDetailsComponent {
   selectedFeatures: { featureId: number, subFeatureIds: number[] }[] = [];
   data: any[] = []
   currentRouteName: string = ''
+  orgFeaturesSubFeaturesList: any[] = []
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
     this.currentRouteName = sessionStorage.getItem('currentRouteName') || ''
     this.route.paramMap.subscribe(params => {
@@ -41,6 +42,7 @@ export class CmsProjectDetailsComponent {
   getFeaturesSubFeatures() {
     this.service.get('getAllFeatures').subscribe((res: any) => {
       this.featuresSubFeaturesList = res.data;
+      this.orgFeaturesSubFeaturesList = res.data;
     })
   }
 
@@ -55,7 +57,21 @@ export class CmsProjectDetailsComponent {
 
     this.service.get<any[]>(`fetchFeaturesById?projectId=${this.id}`).subscribe((res: any) => {
       this.data = res.data || [];
-      this.selectedFeatures = this.data.map(feature => feature.subFeatures.map((sub: { subFeatureId: any; }) => sub.subFeatureId)).flat();
+      const featureMap = new Map<number, Set<number>>();
+
+      this.data.forEach(feature => {
+        if (!featureMap.has(feature.featureId)) {
+          featureMap.set(feature.featureId, new Set<number>());
+        }
+        feature.subFeatures.forEach((sub: { subFeatureId: number }) => {
+          featureMap.get(feature.featureId)?.add(sub.subFeatureId);
+        });
+      });
+
+      this.selectedFeatures = Array.from(featureMap.entries()).map(([featureId, subFeatureIds]) => ({
+        featureId,
+        subFeatureIds: Array.from(subFeatureIds)
+      }));
     })
   }
 
@@ -215,5 +231,20 @@ export class CmsProjectDetailsComponent {
     return remainingFeatures > 0
       ? `${formatted.join(', ')}, +${remainingFeatures} more selected`
       : formatted.join(', ') || 'Please select';
+  }
+
+  search(event: any) {
+    const searchTerm = event.target.value.trim().toLowerCase();
+    if (searchTerm) {
+      this.featuresSubFeaturesList = this.orgFeaturesSubFeaturesList.filter((item: any) => {
+        const matchesFeatures = item.featuresName.toLowerCase().includes(searchTerm);
+        const matchesSubFeatures = item.subFeatures?.some((sub: any) =>
+          sub.subFeaturesName.toLowerCase().includes(searchTerm)
+        );
+        return matchesFeatures || matchesSubFeatures
+      });
+    } else {
+      this.featuresSubFeaturesList = [...this.orgFeaturesSubFeaturesList];
+    }
   }
 }

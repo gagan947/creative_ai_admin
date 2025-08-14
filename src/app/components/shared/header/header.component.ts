@@ -23,6 +23,9 @@ export class HeaderComponent {
   };
 
   onLogout = () => {
+    localStorage.removeItem('userInfo');
+    localStorage.removeItem('role_uuid');
+    localStorage.removeItem('CtiToken');
     this.router.navigate(['/']);
   };
 }

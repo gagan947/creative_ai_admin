@@ -35,6 +35,14 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
   }
 
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Call the subMenuToggleHandlerOnRouteChange function immediately after
+   * the component and its children have been initialized, and call the
+   * subMenuToggleHandlerOnPageReload function 1ms after the page has finished
+   * loading.
+   */
+  /*******  aed1cfec-8874-47a0-a126-df92972dbdb4  *******/
   ngAfterViewInit(): void {
     this.subMenuToggleHandlerOnRouteChange();
     setTimeout(() => { this.subMenuToggleHandlerOnPageReload() }, 1);
@@ -69,7 +77,7 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
         const subMenu = this.elementRef.nativeElement.querySelectorAll(".sub-menu");
         const elem = this.elementRef.nativeElement.querySelector(`[href='${event.url}']`) as Element;
 
-        if (elem.closest('ul.sub-menu-item')) return;
+        if (elem?.closest('ul.sub-menu-item')) return;
 
         subMenu.forEach((subMenu: Element) => {
           if (subMenu.getAttribute('aria-expanded') == 'true')

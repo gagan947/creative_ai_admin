@@ -122,7 +122,7 @@
                               <button class="absolute top-2 right-2" (click)="showViewModal = false">
                                     <i class="bi bi-x text-lg"></i>
                               </button>
-                              <h1 class="text-xl font-bold text-[#2b2b2b] mb-4 text-center">Project Details</h1>
+                              <h1 class="text-xl font-bold text-[#2b2b2b] mb-2 text-center">Project Details</h1>
                               <hr class="mb-6">
 
                               <div class="flex flex-wrap gap-10 items-center">
@@ -178,7 +178,7 @@
                               <button class="absolute top-2 right-2" (click)="showImagesModal = false">
                                     <i class="bi bi-x text-lg"></i>
                               </button>
-                              <h1 class="text-xl font-bold text-[#2b2b2b] mb-4 text-center">Project Images</h1>
+                              <h1 class="text-xl font-bold text-[#2b2b2b] mb-2 text-center">Project Images</h1>
                               <hr class="mb-6">
                               <div>
                                     <label class="block mb-2 text-sm font-medium text-gray-700">Upload Project
@@ -212,7 +212,8 @@
                                     <div class="flex flex-wrap gap-2 mt-4">
                                           @for (item of previewProductImages; track $index) {
                                           <div class="relative">
-                                                <img [src]="item.imageUrl" alt="" class="w-full object-cover rounded" />
+                                                <img [src]="item.imageUrl" alt="Project Image"
+                                                      class="w-full object-cover rounded" />
                                                 <button [disabled]="loading" type="button"
                                                       class="absolute -top-1 -right-1 flex items-center justify-center w-4 h-4 bg-red-700 text-white rounded-full"
                                                       (click)="removeProjectImages($index, item)">

@@ -50,7 +50,7 @@ export class CmsProjectsComponent {
     this.columns = [
       { field: '', header: 'S. No' },
       { field: 'projectName', header: 'Project Name' },
-      { field: 'description', header: 'Description', addClass: 'w-[40rem] text-ellipsis overflow-hidden whitespace-nowrap' },
+      { field: 'description', header: 'Description', addClass: 'w-[38rem] text-ellipsis overflow-hidden whitespace-nowrap' },
       { field: 'action', header: 'Action', isEdit: true, isDelete: true, isView: true, isAlbum: true, isFeatures: true },
     ]
   }

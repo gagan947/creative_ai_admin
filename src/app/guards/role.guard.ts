@@ -12,7 +12,7 @@ export class RoleGuard implements CanActivate {
             const perms = this.authz.getRoutePermissions(fullPath);
             if (perms.view) return true;
 
-            this.router.navigate(['/unauthorized']);
+            this.router.navigate(['/']);
             return false;
       }
 }

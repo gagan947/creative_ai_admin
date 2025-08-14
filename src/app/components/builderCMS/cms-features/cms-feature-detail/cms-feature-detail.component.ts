@@ -81,7 +81,7 @@ export class CmsFeatureDetailComponent {
       if (res.success == true) {
         this.toastr.success(res.message)
         this.getData()
-        this.onModalCloseHandler(false)
+        // this.onModalCloseHandler(false)
         this.loading = false
         this.Form.reset()
         this.subFeatureId = null

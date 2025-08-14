@@ -30,10 +30,12 @@
                               <button class="absolute top-2 right-2" (click)="showModal = false">
                                     <i class="bi bi-x text-lg"></i>
                               </button>
-                              <h1 class="text-lg font-bold text-[#2b2b2b] mb-4 text-center">Add Features & Sub-Features
+                              <h1 class="text-lg font-bold text-[#2b2b2b] mb-2 text-center">
+                                    {{data.length > 0 ? 'Update' : 'Add'}} Features & Sub-Features
                               </h1>
                               <hr class="mb-5">
                               <form>
+                                    <div *ngIf="dropdownOpen" id="overlay" (click)="dropdownOpen = false"></div>
                                     <div class="grid grid-cols-1 md:grid-cols-1 gap-4">
                                           <div>
                                                 <label for="project_name"
@@ -49,7 +51,12 @@
 
                                                       <!-- Tree Dropdown -->
                                                       <div *ngIf="dropdownOpen"
-                                                            class="absolute z-auto mt-2 w-full border bg-white max-h-64 overflow-auto shadow-lg rounded">
+                                                            class="absolute z-10 mt-2 w-full border bg-white h-[45vh] overflow-auto shadow-lg rounded">
+                                                            <div class="p-2 sticky top-0 bg-white">
+                                                                  <input type="text" (input)="search($event)"
+                                                                        placeholder="Search..."
+                                                                        class="search-input border border-gray-300 rounded-md px-2 py-1 focus:outline-none w-full">
+                                                            </div>
                                                             <div *ngFor="let feature of featuresSubFeaturesList"
                                                                   class="p-2 border-b">
                                                                   <!-- Feature Checkbox with indeterminate -->
