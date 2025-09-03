@@ -7,7 +7,7 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonService } from '../../../services/common.service';
 import { NoWhitespaceDirective } from '../../../validators';
 import { SubmitButtonComponent } from "../../shared/submit-button/submit-button.component";
-
+import { environment } from '../../../../environments/environment';
 @Component({
   selector: 'app-cms-projects',
   standalone: true,
@@ -16,6 +16,7 @@ import { SubmitButtonComponent } from "../../shared/submit-button/submit-button.
   styleUrl: './cms-projects.component.css'
 })
 export class CmsProjectsComponent {
+  imageUrl = environment.imageUrl
   Form!: FormGroup;
   loading: boolean = false
   columns: any[] = []

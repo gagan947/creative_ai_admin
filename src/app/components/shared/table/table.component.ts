@@ -84,7 +84,8 @@ export class TableComponent {
       this.totalRecords = res.totalRecords || 0;
       this.isLoading = false
     }, (err: any) => {
-      this.isLoading = false
+      this.isLoading = false;
+      this.pagedData = [];
     });
   }
 
