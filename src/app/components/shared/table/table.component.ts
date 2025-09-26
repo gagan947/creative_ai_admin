@@ -165,6 +165,12 @@ export class TableComponent {
 
   search = debounce((event: any) => {
     this.searchQuery = event.target.value.trim();
-    this.fetchData();
+    if(this.searchQuery.length > 0) {
+      this.currentPage = 1
+      this.fetchData();
+
+    }
+
+    // this.fetchData();
   }, 500);
 }
