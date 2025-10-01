@@ -6,6 +6,8 @@ export const ROLE_PERMISSIONS: Record<string, Record<string, Permission>> = {
             '/admin/teams': { view: true, add: true, edit: true, delete: true },
             '/admin/project-enquiries': { view: true },
             '/admin/projects': { view: true, add: true, edit: true, delete: true },
+            '/admin/blog-management': { view: true, add: true, edit: true, delete: true },
+            '/admin/add-blog': { view: true, add: true, edit: true, delete: true },
             '/admin/builder-cms/projects': { view: true, add: true, edit: true, delete: true },
             '/admin/builder-cms/project-details': { view: true, add: true, edit: true, delete: true },
             '/admin/builder-cms/Features': { view: true, add: true, edit: true, delete: true },

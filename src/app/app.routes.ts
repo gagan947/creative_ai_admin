@@ -14,7 +14,7 @@ export const routes: Routes = [
       {
             path: 'admin',
             loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
-            canActivate: [RoleGuard],
+            // canActivate: [RoleGuard],
             children: [
                   {
                         path: 'dashboard',
@@ -50,6 +50,16 @@ export const routes: Routes = [
                   {
                         path: 'builder-cms/feature-detail/:id',
                         loadComponent: () => import('./components/builderCMS/cms-features/cms-feature-detail/cms-feature-detail.component').then(m => m.CmsFeatureDetailComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
+                        path: 'blog-management',
+                        loadComponent: () => import('./components/blog-management/blogs-list/blogs-list.component').then(m => m.BlogsListComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
+                        path: 'add-blog',
+                        loadComponent: () => import('./components/blog-management/add-blog/add-blog.component').then(m => m.AddBlogComponent),
                         // canActivate: [RoleGuard],
                   },
                   {
