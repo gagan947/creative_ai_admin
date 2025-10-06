@@ -95,7 +95,7 @@ export class AddBlogComponent {
     let formData = new FormData()
 
     if (this.blogId) {
-      const htmlContentAbout = `${this.Form.value.description.trim()}`;
+      const htmlContentAbout = `${this.Form.value.text_editor.trim()}`;
       apiUrl = 'updateBlogsCMS'
       formData.append('id', this.blogId.toString())
       formData.append('text_editor', htmlContentAbout);
@@ -106,7 +106,7 @@ export class AddBlogComponent {
         formData.append('blog_image', this.LogoImage)
       }
     } else {
-      const htmlContentAbout = `${this.Form.value.description.trim()}`;
+      const htmlContentAbout = `${this.Form.value.text_editor.trim()}`;
       apiUrl = 'addBlogsCMS'
       formData.append('text_editor', htmlContentAbout)
       formData.append('title', this.Form.value.title.trim())
@@ -147,7 +147,7 @@ export class AddBlogComponent {
             text_editor: resp.data[0].text_editor,
             description: resp.data[0].description,
           });
-          this.logoPreview = this.imageUrl+resp.data[0].banner_image;
+          this.logoPreview = this.imageUrl + resp.data[0].banner_image;
         } else {
           this.toastr.warning(resp.message);
         }
