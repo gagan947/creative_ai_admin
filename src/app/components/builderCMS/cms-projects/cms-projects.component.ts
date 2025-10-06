@@ -23,7 +23,7 @@ export class CmsProjectsComponent {
   url: string = ''
   showModal: boolean = false;
   showViewModal: boolean = false;
-  projectData: any
+  projectData: any;
   LogoImage: File | null = null;
   logoPreview: string | null = null;
   projectId: number | null = null;
@@ -122,6 +122,7 @@ export class CmsProjectsComponent {
   onDelete(event: any) {
     console.log(event);
   }
+
   openModal() {
     this.showModal = !this.showModal;
   }

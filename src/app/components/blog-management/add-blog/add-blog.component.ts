@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonService } from '../../../services/common.service';
 import { NoWhitespaceDirective } from '../../../validators';
 import { CommonModule, Location } from '@angular/common';
 import { SubmitButtonComponent } from '../../shared/submit-button/submit-button.component';
+import { Editor, NgxEditorModule, Toolbar } from 'ngx-editor';
+import { environment } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-add-blog',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, SubmitButtonComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, SubmitButtonComponent, NgxEditorModule, RouterLink],
   templateUrl: './add-blog.component.html',
   styleUrl: './add-blog.component.css'
 })
@@ -18,17 +20,51 @@ export class AddBlogComponent {
   Form!: FormGroup;
   LogoImage: File | null = null;
   loading: boolean = false;
-  blogId: number | null = null;
+  blogId: any | null = null;
   logoPreview: string | null = null;
-  constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location) {
-    this.initForm()
+  editor1!: Editor;
+  about_us: any = '';
+  submited: boolean = false
+  imageUrl: any = environment.imageUrl;
+  constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, public location: Location, private route: ActivatedRoute) {
+
   }
+
+  ngOnInit() {
+    this.blogId = this.route.snapshot.queryParamMap.get('id');
+    this.initForm();
+    if (this.blogId) {
+      this.geSingleBlog();
+    }
+  }
+
   initForm() {
+    this.editor1 = new Editor();
     this.Form = new FormGroup({
       title: new FormControl('', [Validators.required, NoWhitespaceDirective.validate]),
-      description: new FormControl('', [Validators.required, NoWhitespaceDirective.validate])
+      description: new FormControl('', [Validators.required, NoWhitespaceDirective.validate]),
+      post_date: new FormControl('', [Validators.required, NoWhitespaceDirective.validate]),
+      text_editor: new FormControl('', [Validators.required, NoWhitespaceDirective.validate]),
+      // img: new FormControl(null, [Validators.required]),
     })
   }
+
+  toolbar1: Toolbar = [
+    // default value
+    ['bold', 'italic'],
+    ['underline', 'strike'],
+    ['code'],
+    //['ordered_list', 'bullet_list'],
+    [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
+    //['link', 'image'],
+    // or, set options for link:
+    //[{ link: { showOpenInNewTab: false } }, 'image'],
+    ['text_color', 'background_color'],
+    //['align_left', 'align_center', 'align_right', 'align_justify'],
+    //['horizontal_rule', 'format_clear', 'indent', 'outdent'],
+    //['superscript', 'subscript'],
+    ['undo', 'redo'],
+  ];
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
@@ -46,7 +82,9 @@ export class AddBlogComponent {
   }
 
   onSubmit() {
-    if (this.Form.invalid) {
+    // debugger
+    if (this.Form.invalid || !this.logoPreview) {
+      this.submited = true;
       this.Form.markAllAsTouched();
       return
     }
@@ -57,26 +95,34 @@ export class AddBlogComponent {
     let formData = new FormData()
 
     if (this.blogId) {
-      apiUrl = 'updateProjects'
-      formData.append('blogId', this.blogId.toString())
-      formData.append('projectName', this.Form.value.project_name.trim())
-      formData.append('description', this.Form.value.project_description.trim())
+      const htmlContentAbout = `${this.Form.value.description.trim()}`;
+      apiUrl = 'updateBlogsCMS'
+      formData.append('id', this.blogId.toString())
+      formData.append('text_editor', htmlContentAbout);
+      formData.append('title', this.Form.value.title.trim())
+      formData.append('description', this.Form.value.description.trim())
+      formData.append('post_date', this.Form.value.post_date)
       if (this.LogoImage) {
-        formData.append('projectImage', this.LogoImage)
+        formData.append('blog_image', this.LogoImage)
       }
     } else {
-      apiUrl = 'insertOnboardProjects'
-      formData.append('projectName', this.Form.value.project_name.trim())
-      formData.append('description', this.Form.value.project_description.trim())
+      const htmlContentAbout = `${this.Form.value.description.trim()}`;
+      apiUrl = 'addBlogsCMS'
+      formData.append('text_editor', htmlContentAbout)
+      formData.append('title', this.Form.value.title.trim())
+      formData.append('description', this.Form.value.description.trim())
+      formData.append('post_date', this.Form.value.post_date)
       if (this.LogoImage) {
-        formData.append('projectImage', this.LogoImage)
+        formData.append('blog_image', this.LogoImage)
       }
     }
 
     this.service.postAPI(apiUrl, formData).subscribe((res: any) => {
       if (res.success == true) {
         this.toastr.success(res.message)
-        this.Form.reset()
+
+        this.router.navigateByUrl('/admin/blog-management')
+
         this.LogoImage = this.logoPreview = null
         this.loading = false;
         this.blogId = null
@@ -90,4 +136,27 @@ export class AddBlogComponent {
         this.loading = false
       })
   }
+
+  geSingleBlog() {
+    this.service.get(`getBlogById?id=${this.blogId}`).subscribe({
+      next: (resp: any) => {
+        if (resp.success) {
+          this.Form.patchValue({
+            title: resp.data[0].title,
+            post_date: resp.data[0].post_date,
+            text_editor: resp.data[0].text_editor,
+            description: resp.data[0].description,
+          });
+          this.logoPreview = this.imageUrl+resp.data[0].banner_image;
+        } else {
+          this.toastr.warning(resp.message);
+        }
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+
 }

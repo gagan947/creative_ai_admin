@@ -32,6 +32,12 @@
                               </div>
                               <input #imageInput type="file" id="image" class="hidden" (change)="onFileSelected($event)"
                                     accept="image/*">
+
+                              <div *ngIf="!logoPreview && submited" class="error-message">
+                                    <div class="ct_fs_14 mt-1">
+                                          Banner image is required.
+                                    </div>
+                              </div>
                         </div>
                   </div>
                   <div>
@@ -47,6 +53,21 @@
                               </div>
                         </div>
                   </div>
+
+                  <div>
+                        <label for="post_date" class="block text-xs font-medium text-gray-700">
+                              Post Date
+                        </label>
+                        <input type="date" id="post_date" formControlName="post_date" class="form-control w-full"
+                              placeholder="Enter blog title">
+                        <div *ngIf="Form.controls['post_date'].invalid && Form.controls['post_date'].touched"
+                              class="error-message">
+                              <div *ngIf="Form.controls['post_date'].errors?.['required']" class="ct_fs_14 mt-1">
+                                    Post date is required.
+                              </div>
+                        </div>
+                  </div>
+
                   <div>
                         <label for="project_description" class="block text-xs font-medium text-gray-700">
                               Description
@@ -61,9 +82,25 @@
                               </div>
                         </div>
                   </div>
+
+                  <div>
+                        <label for="project_detail" class="block text-xs font-medium text-gray-700">
+                              Project Detail
+                        </label>
+                        <ngx-editor-menu [editor]="editor1" [toolbar]="toolbar1"></ngx-editor-menu>
+                        <ngx-editor [editor]="editor1" formControlName="text_editor"></ngx-editor>
+
+                        <div *ngIf="Form.controls['text_editor'].invalid && Form.controls['text_editor'].touched"
+                              class="error-message">
+                              <div *ngIf="Form.controls['text_editor'].errors?.['required']" class="ct_fs_14 mt-1">
+                                    Project detail is required.
+                              </div>
+                        </div>
+                  </div>
+
             </div>
             <div class="flex justify-end gap-4 items-center mt-5 sm:mt-6">
-                  <button type="reset" class="btn bg-gray-500 text-white">
+                  <button routerLink="/admin/blog-management" class="btn bg-gray-500 text-white">
                         Cancel
                   </button>
                   <app-submit-button [isLoading]="loading" [text]="'Save'"
