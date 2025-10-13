@@ -49,6 +49,15 @@
                                                 <ng-container *ngIf="col.field === ''">
                                                       {{ ((currentPage - 1) * pageSize) + rowIndex + 1 }}
                                                 </ng-container>
+                                                <!-- column  concat-->
+                                                <ng-container *ngIf="col.field && col.field2 && col.combine">
+                                                      @if(row[col.field]== null){
+                                                      {{ 'N/A' }}
+                                                      }@else{
+                                                            {{ row[col.field] + ' ' + row[col.field2]  || 'N/A' }}
+
+                                                      }
+                                                </ng-container>
 
                                                 <!-- Pipe applied -->
                                                 <ng-container *ngIf="col.field && col.pipe">
@@ -62,7 +71,7 @@
 
                                                 <!-- Normal field display -->
                                                 <p class="mb-0"
-                                                      *ngIf="col.field && !col.pipe && !col.isArray && col.field !== 'action'"
+                                                      *ngIf="col.field && !col.pipe && !col.isArray && !col.combine  && col.field !== 'action'" 
                                                       [ngClass]="col.addClass">
                                                       {{ row[col.field] || 'N/A' }}
                                                 </p>

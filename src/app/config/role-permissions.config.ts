@@ -12,6 +12,7 @@ export const ROLE_PERMISSIONS: Record<string, Record<string, Permission>> = {
             '/admin/builder-cms/project-details': { view: true, add: true, edit: true, delete: true },
             '/admin/builder-cms/Features': { view: true, add: true, edit: true, delete: true },
             '/admin/builder-cms/feature-detail': { view: true, add: true, edit: true, delete: true },
+            '/admin/user_buider_projects': { view: true },
       },
 
       '55aef2d8-38db-11ee-be56-0242ac120002': { // Sub Admin

@@ -17,6 +17,7 @@ export class TableComponent {
   @Input() apiUrl!: string;
   @Input() columns: {
     field: string;
+    field2?:string ;
     header: string;
     align?: string;
     width?: string;
@@ -29,6 +30,7 @@ export class TableComponent {
     isView?: boolean;
     isFeatures?: boolean;
     isAlbum?: boolean;
+    combine?:boolean
   }[] = [];
   @Input() pageSizeOptions: number[] = [10, 20, 25];
   @Input() projectId?: any
@@ -38,6 +40,7 @@ export class TableComponent {
   @Output() deleteClicked = new EventEmitter<any>();
   @Output() featureViewClicked = new EventEmitter<any>();
   @Output() albumUploadClicked = new EventEmitter<any>();
+  @Output() dataGetter = new EventEmitter<any>();
 
   pagedData: any[] = [];
   totalRecords = 0;
@@ -80,7 +83,9 @@ export class TableComponent {
     }
 
     this.service.get<any[]>(this.apiUrl, params).subscribe((res: any) => {
+      
       this.pagedData = res.data || [];
+      this.dataGetter.emit(this.pagedData)
       this.totalRecords = res.totalRecords || 0;
       this.isLoading = false
     }, (err: any) => {
@@ -173,4 +178,5 @@ export class TableComponent {
 
     // this.fetchData();
   }, 500);
+
 }

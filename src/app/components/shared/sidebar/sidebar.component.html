@@ -17,15 +17,15 @@
                 Team </a>
         </li>
         <li>
-            <a routerLink="/admin/project-enquiries" class="menu-item" routerLinkActive="active"
+            <a routerLink="/admin/user_buider_projects" class="menu-item" routerLinkActive="active"
                 ariaCurrentWhenActive="page">
                 <i class="bi bi-question-circle"></i>
-                Project Enquries </a>
+                User Builder Projects </a>
         </li>
         <li>
             <a routerLink="/admin/projects" class="menu-item" routerLinkActive="active" ariaCurrentWhenActive="page">
                 <i class="bi bi-kanban"></i>
-                <span>Project</span>
+                <span>Onboarded Project</span>
             </a>
         </li>
         <!-- <li>
@@ -97,28 +97,29 @@
             <a href="javascript:void(0)" class="menu-item sub-menu" aria-expanded="false"
                 (click)="subMenuToggleHandler($event)">
                 <i class="bi bi-sliders2-vertical"></i>
-                <span>Builder CMS</span>
+                <span>Content Management</span>
             </a>
             <ul class="sub-menu-item">
                 <li>
                     <a routerLink="/admin/builder-cms/projects" class="menu-item" routerLinkActive="active"
                         ariaCurrentWhenActive="page">
-                        <span>Projects</span>
+                        <span>Builder Projects</span>
                     </a>
                 </li>
                 <li>
                     <a routerLink="/admin/builder-cms/Features" class="menu-item" routerLinkActive="active"
                         ariaCurrentWhenActive="page">
-                        <span>Features</span>
+                        <span> Builder Features</span>
+                    </a>
+                    <a routerLink="blog-management" routerLinkActive="active" class="menu-item" ariaCurrentWhenActive="page">
+                        <!-- <i class="bi bi-file-post"></i> -->
+                        <span>Blog Management</span>
                     </a>
                 </li>
             </ul>
         </li>
         <li>
-            <a routerLink="blog-management" routerLinkActive="active" class="menu-item" ariaCurrentWhenActive="page">
-                <i class="bi bi-file-post"></i>
-                <span>Blog Management</span>
-            </a>
+           
         </li>
     </ul>
 </aside>
