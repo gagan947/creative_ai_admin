@@ -340,3 +340,57 @@
 .cdk-overlay-pane {
   max-height: 250px !important;
 }
+
+
+
+.NgxEditor__Content ul {
+  list-style-type: disc !important;
+  margin-left: 1.5rem;
+}
+
+.NgxEditor__Content ol {
+  list-style-type: decimal !important;
+  margin-left: 1.5rem;
+}
+
+.NgxEditor__Content h1 {
+  font-size: 1.875rem !important;
+  /* text-3xl */
+  font-weight: 700 !important;
+  margin: 1rem 0 !important;
+}
+
+.NgxEditor__Content h2 {
+  font-size: 1.5rem !important;
+  /* text-2xl */
+  font-weight: 600 !important;
+  margin: 0.75rem 0 !important;
+}
+
+.NgxEditor__Content h3 {
+  font-size: 1.25rem !important;
+  /* text-xl */
+  font-weight: 600 !important;
+  margin: 0.5rem 0 !important;
+}
+
+.NgxEditor__Content h4 {
+  font-size: 1.125rem !important;
+  /* text-lg */
+  font-weight: 600 !important;
+  margin: 0.5rem 0 !important;
+}
+
+.NgxEditor__Content h5 {
+  font-size: 1rem !important;
+  /* text-base */
+  font-weight: 600 !important;
+  margin: 0.5rem 0 !important;
+}
+
+.NgxEditor__Content h6 {
+  font-size: 0.875rem !important;
+  /* text-sm */
+  font-weight: 600 !important;
+  margin: 0.5rem 0 !important;
+}

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -14,7 +14,8 @@ import { environment } from '../../../../environments/environment.development';
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, CommonModule, SubmitButtonComponent, NgxEditorModule, RouterLink],
   templateUrl: './add-blog.component.html',
-  styleUrl: './add-blog.component.css'
+  styleUrl: './add-blog.component.css',
+  encapsulation: ViewEncapsulation.None
 })
 export class AddBlogComponent {
   Form!: FormGroup;
@@ -54,15 +55,15 @@ export class AddBlogComponent {
     ['bold', 'italic'],
     ['underline', 'strike'],
     ['code'],
-    //['ordered_list', 'bullet_list'],
+    ['ordered_list', 'bullet_list'],
     [{ heading: ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] }],
-    //['link', 'image'],
+    // ['link', 'image'],
     // or, set options for link:
-    //[{ link: { showOpenInNewTab: false } }, 'image'],
+    [{ link: { showOpenInNewTab: false } }, 'image'],
     ['text_color', 'background_color'],
-    //['align_left', 'align_center', 'align_right', 'align_justify'],
-    //['horizontal_rule', 'format_clear', 'indent', 'outdent'],
-    //['superscript', 'subscript'],
+    ['align_left', 'align_center', 'align_right', 'align_justify'],
+    ['horizontal_rule', 'format_clear', 'indent', 'outdent'],
+    ['superscript', 'subscript'],
     ['undo', 'redo'],
   ];
 
