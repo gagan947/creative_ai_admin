@@ -87,7 +87,13 @@
                         <td>{{item.final_cost_with_tax_discount || '-'}}</td> -->
                         <!-- <td>{{item.security_deposit || '-'}}</td>
                         <td>{{item.remaining_cost || '-'}}</td> -->
-                        <td>{{item.payment_status || '-'}}</td>
+                        <td>
+                            @if(item.payment_status == '0'){
+                            Draft
+                            } @else {
+                            Paid
+                            }
+                        </td>
                         <td>{{item.currency_rate || '-'}}</td>
                         <td>{{item.createdAt | date:'dd-MMM-yyyy'}}</td>
                         <td>
