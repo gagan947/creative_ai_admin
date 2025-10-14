@@ -1,0 +1,235 @@
+<div class="card p-5">
+    <div class="flex justify-between items-center">
+        <div class="card-title">
+            <h3 class="text-xl font-bold leading-none">Projects</h3>
+        </div>
+        <!-- <button routerLink="/admin/add-blog" class="btn bg-[#1b83c1] text-white btn-xs">
+            <i class="bi bi-plus"></i> Add New
+        </button> -->
+    </div>
+    <div class="data-table mt-3">
+        <div class="table-container overflow-auto">
+            <table class="divide-y divide-gray-200 w-full">
+                <thead class="bg-gray-50 sticky top-0">
+                    <tr>
+                        <th>S No.</th>
+                        <th>Project Name</th>
+                        <th>Durations</th>
+                        <th>Features Cost</th>
+                        <th>No Of Features</th>
+                        <th>Cost Delivery</th>
+                        <th>Platforms</th>
+                        <th>Development Speed</th>
+                        <th>Currency Code</th>
+                        <th>Logo Size</th>
+                        <th>Payment Plan</th>
+                        <th>Project Status</th>
+                        <th>Design Url</th>
+                        <th>Installment Type</th>
+                        <th>Tax Amount</th>
+                        <th>Discount Dost</th>
+                        <th>Final Cost</th>
+                        <th>Security Deposit</th>
+                        <th>Remaining Cost</th>
+                        <th>Payment Status</th>
+                        <th>Currency Rate</th>
+                        <th>Created At</th>
+                        <th>Current Routes</th>
+                        <th>Billing Details</th>
+                        <th>Phases Deliverables</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr *ngFor="let item of tableData; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{item.clientProjectName || '-'}}</td>
+                        <td>{{item.durations || '-'}}</td>
+                        <td>{{item.features_cost || '-'}}</td>
+                        <td>{{item.no_of_features || '-'}}</td>
+                        <td>{{item.total_cost_delivery || '-'}}</td>
+                        <td>{{item.platforms || '-'}}</td>
+                        <td>{{item.development_speed || '-'}}</td>
+                        <td>{{item.client_currency_code || '-'}}</td>
+                        <td>{{item.logoSize || '-'}}</td>
+                        <td>{{item.payment_plan || '-'}}</td>
+                        <td>{{item.projectStatus || '-'}}</td>
+                        <td>{{item.design_url || '-'}}</td>
+                        <td>{{item.installment_type || '-'}}</td>
+                        <td>{{item.tax_amount || '-'}}</td>
+                        <td>{{item.discount_cost || '-'}}</td>
+                        <td>{{item.final_cost_with_tax_discount || '-'}}</td>
+                        <td>{{item.security_deposit || '-'}}</td>
+                        <td>{{item.remaining_cost || '-'}}</td>
+                        <td>{{item.payment_status || '-'}}</td>
+                        <td>{{item.currency_rate || '-'}}</td>
+                        <td>{{item.createdAt | date:'dd-MMM-yyyy'}}</td>
+                        <td>
+                            @if(item.currentRoutes == "/payment-plan"){
+                            Payment-Plan
+                            }
+                            @else if(item.currentRoutes == "/choose-base"){
+                            Choose Base
+                            }
+                            @else if(item.currentRoutes == "/make-it-mine"){
+                            Make it Mine
+                            }
+                            @else if(item.currentRoutes == "/refine-idea"){
+                            Refine Idea
+                            }
+                            @else if(item.currentRoutes == "/review-buildcard"){
+                            Review Buildcard
+                            }
+                            @else if(item.currentRoutes == "/billing-details"){
+                            Billing Details
+                            }
+                            @else {
+                            -
+                            }
+                        </td>
+                        <td (click)="onViewBilling(item.billing_details)">Billing Details</td>
+                        <td (click)="onViewFeatures(item.projectFeatures)">Project Features</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal" role="dialog" [attr.aria-modal]="showBillingModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+        <div class="modal-container">
+            <div class="modal-box">
+                <div class="bg-white p-6 sm:p-4 rounded shadow-md max-w-6xl w-full mx-auto relative">
+                    <button class="absolute top-2 right-2" (click)="showBillingModal = false">
+                        <i class="bi bi-x text-lg"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-[#2b2b2b] mb-2 text-center">Billing Details</h1>
+                    <hr class="mb-6">
+
+                    <div class="flex flex-wrap gap-10 items-center">
+
+                        <div class="grid grid-cols-5 gap-4">
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Customer Name</h2>
+                                <p class="text-sm text-gray-600">{{ billingDetails?.full_name }}</p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Customer Type</h2>
+                                <p class="text-sm text-gray-600">{{ billingDetails?.customer_type }}</p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Company Name</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.company_name }}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Phone Number</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.country_code }} {{ billingDetails?.phoneNumber }}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Company Location</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.company_location }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Address</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.address_line_1 }}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">City</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.city }}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">State</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.state }}
+                                </p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Postal Code</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ billingDetails?.postal_code }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <h2 class="text-md font-semibold text-gray-700">Email</h2>
+                        <p class="text-sm text-gray-600 max-h-64 overflow-y-auto pr-2">
+                            {{ billingDetails?.email }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" role="dialog" [attr.aria-modal]="showFeaturesModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-wrapper">
+        <div class="modal-container">
+            <div class="modal-box">
+                <div class="bg-white p-6 sm:p-4 rounded shadow-md max-w-6xl w-full mx-auto relative">
+                    <button class="absolute top-2 right-2" (click)="showFeaturesModal = false">
+                        <i class="bi bi-x text-lg"></i>
+                    </button>
+                    <h1 class="text-xl font-bold text-[#2b2b2b] mb-2 text-center">Project Features</h1>
+                    <hr class="mb-6">
+
+                    <div class="flex flex-wrap gap-10 items-center">
+                        <!-- <div class="grid grid-cols-5 gap-4">
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Project Name</h2>
+                                <p class="text-sm text-gray-600">{{ projectFeatures?.projectName }}</p>
+                            </div>
+                            <div>
+                                <h2 class="text-md font-semibold text-gray-700">Created At</h2>
+                                <p class="text-sm text-gray-600">
+                                    {{ projectFeatures?.createdAt | date:'dd-MMM-yyyy' }}
+                                </p>
+                            </div>
+                        </div> -->
+                    </div>
+
+                    <!-- Features List -->
+                    <div class="mt-6">
+                        <div *ngFor="let feature of projectFeatures">
+                            <div class="border-b border-gray-200 py-3">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-1">
+                                    {{ feature.featureName }}
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-2">
+                                    <b>Total Time:</b> {{ feature.featureTime }} hrs
+                                </p>
+
+                                <ul class="list-disc pl-5 text-sm text-gray-700">
+                                    <li *ngFor="let sub of feature.subFeatures">
+                                        {{ sub.subFeatureName }} ({{ sub.estimated_time }} hrs)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -43,6 +43,11 @@ export const routes: Routes = [
                         canActivate: [RoleGuard],
                   },
                   {
+                        path: 'project-list',
+                        loadComponent: () => import('./components/user-projects/project-list/project-list.component').then(m => m.ProjectListComponent),
+                        // canActivate: [RoleGuard],
+                  },
+                  {
                         path: 'builder-cms/projects',
                         loadComponent: () => import('./components/builderCMS/cms-projects/cms-projects.component').then(m => m.CmsProjectsComponent),
                         // canActivate: [RoleGuard],
