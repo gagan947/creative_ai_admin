@@ -54,7 +54,7 @@
                                                       @if(row[col.field]== null){
                                                       {{ 'N/A' }}
                                                       }@else{
-                                                            {{ row[col.field] + ' ' + row[col.field2]  || 'N/A' }}
+                                                      {{ row[col.field] + ' ' + row[col.field2] || 'N/A' }}
 
                                                       }
                                                 </ng-container>
@@ -71,7 +71,7 @@
 
                                                 <!-- Normal field display -->
                                                 <p class="mb-0"
-                                                      *ngIf="col.field && !col.pipe && !col.isArray && !col.combine  && col.field !== 'action'" 
+                                                      *ngIf="col.field && !col.pipe && !col.isArray && !col.combine  && col.field !== 'action'"
                                                       [ngClass]="col.addClass">
                                                       {{ row[col.field] || 'N/A' }}
                                                 </p>

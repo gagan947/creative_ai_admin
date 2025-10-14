@@ -23,8 +23,10 @@ export class ProjectListComponent {
   columns: any[] = []
   url: string = ''
   showBillingModal: boolean = false;
+  showCostingModal: boolean = false;
   showFeaturesModal: boolean = false;
-
+  searchText: string = '';
+  filteredData: any[] = [];
 
   constructor(private service: CommonService, private toastr: NzMessageService, private router: Router, private route: ActivatedRoute) {
 
@@ -70,9 +72,20 @@ export class ProjectListComponent {
         }
         return project;
       });
-
-
+      this.filterTable();
     });
+  }
+
+  filterTable() {
+    let filtered = this.tableData;
+    // Filter by customer name
+    if (this.searchText.trim()) {
+      const keyword = this.searchText.trim().toLowerCase();
+      filtered = filtered.filter((item: any) =>
+        (item.clientProjectName?.toLowerCase().includes(keyword))
+      );
+    }
+    this.filteredData = filtered;
   }
 
   onViewBilling(billingDetails: any) {
@@ -97,22 +110,28 @@ export class ProjectListComponent {
   }
 
 
-onViewFeatures(projectFeatures: any) {
-  this.showFeaturesModal = true; // open features modal
+  onViewFeatures(projectFeatures: any) {
+    this.showFeaturesModal = true; // open features modal
 
-  try {
-    // Parse if it's a stringified JSON
-    this.projectFeatures = typeof projectFeatures === 'string'
-      ? JSON.parse(projectFeatures)
-      : projectFeatures;
-  } catch {
-    // Fallback if parsing fails
-    this.projectFeatures = projectFeatures;
+    try {
+      // Parse if it's a stringified JSON
+      this.projectFeatures = typeof projectFeatures === 'string'
+        ? JSON.parse(projectFeatures)
+        : projectFeatures;
+    } catch {
+      // Fallback if parsing fails
+      this.projectFeatures = projectFeatures;
+    }
+
+    console.log('Project features to show in modal:', this.projectFeatures);
   }
 
-  console.log('Project features to show in modal:', this.projectFeatures);
-}
+  costingData: any;
 
+  onViewCosting(item: any) {
+    this.showCostingModal = true;
+    this.costingData = item;
+  }
 
 
 }
