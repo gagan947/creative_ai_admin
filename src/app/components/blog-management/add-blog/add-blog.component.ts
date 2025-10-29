@@ -83,7 +83,6 @@ export class AddBlogComponent {
   }
 
   onSubmit() {
-    // debugger
     if (this.Form.invalid || !this.logoPreview) {
       this.submited = true;
       this.Form.markAllAsTouched();

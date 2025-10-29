@@ -163,7 +163,6 @@ export class TableComponent {
   }
 
   parseData(array: any[], key: string): string {
-    debugger
     if (!Array.isArray(array) || !key) return 'N/A';
     const values = array.map(item => item?.[key]).filter(Boolean);
     return values.length ? values.join(' | ') : 'N/A';
