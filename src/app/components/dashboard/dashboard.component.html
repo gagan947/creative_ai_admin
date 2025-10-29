@@ -37,4 +37,32 @@
                   </div>
             </div>
       </section>
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
+            <!-- Total Users Chart -->
+            <div class="card p-5 shadow rounded-2xl bg-white">
+                  <div class="flex justify-between items-center mb-4">
+                        <h5 class="text-lg font-semibold">Total Users</h5>
+                        <div class="flex gap-2">
+                              <button *ngFor="let option of filterOptions"
+                                    class="px-3 py-1 text-sm rounded-lg border border-gray-300 hover:bg-violet-100 transition"
+                                    [class.bg-violet-600]="activeFilter === option"
+                                    [class.text-white]="activeFilter === option" (click)="filterChart(option)">
+                                    {{ option | titlecase }}
+                              </button>
+                        </div>
+                  </div>
+
+                  <ngx-charts-line-chart [view]="[550,300]" [scheme]="colorScheme" [results]="userChartData"
+                        [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [animations]="true">
+                  </ngx-charts-line-chart>
+            </div>
+
+            <!-- Total Revenue Chart -->
+            <div class="card p-5 shadow rounded-2xl bg-white">
+                  <h5 class="text-lg font-semibold mb-4">Total Revenue</h5>
+                  <ngx-charts-bar-vertical [view]="[550,300]" [scheme]="colorSchemeRevenue" [results]="revenueChartData"
+                        [gradient]="false" [xAxis]="true" [yAxis]="true" [legend]="false" [animations]="true">
+                  </ngx-charts-bar-vertical>
+            </div>
+      </section>
 </div>
